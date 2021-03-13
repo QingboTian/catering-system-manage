@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Cookie from 'js-cookie';
 
 const service = axios.create({
     // process.env.NODE_ENV === 'development' 来判断是否开发环境
@@ -9,6 +10,8 @@ const service = axios.create({
 
 service.interceptors.request.use(
     config => {
+        var accessToken = Cookie.get('access-token');
+        config.headers['token'] = JSON.parse(accessToken).token;
         return config;
     },
     error => {
@@ -21,6 +24,8 @@ service.interceptors.response.use(
     response => {
         if (response.status === 200) {
             return response.data;
+        } else if (response.status === 401) {
+            this.$router.push('/login');
         } else {
             Promise.reject();
         }

@@ -28,12 +28,14 @@
 </template>
 
 <script>
+import {login} from '../../api/login';
+import Cookie from 'js-cookie';
 export default {
     data: function() {
         return {
             param: {
                 username: 'admin',
-                password: '123123'
+                password: 'admin'
             },
             rules: {
                 username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
@@ -43,22 +45,33 @@ export default {
     },
     methods: {
         submitForm() {
-            this.$refs.login.validate(valid => {
-                if (valid) {
-                    // 执行登录操作
-                    if (this.param.username != 'tianqb') {
-                        this.$message.error('登陆失败');
-                    } else {
-                        this.$message.success('登录成功');
-                        localStorage.setItem('ms_username', this.param.username);
-                        this.$router.push('/');
-                    }
+            login(this.param).then(res => {
+                if (res.status == 200) {
+                    localStorage.setItem('access-token', res.data);
+                    // Cookie.set("access-token", res.data);
+                    this.$router.push('/');
                 } else {
-                    this.$message.error('请输入账号和密码');
-                    console.log('error submit!!');
-                    return false;
+                    this.$message(res.msg)
                 }
-            });
+            }, err => {
+                console.log(err)
+            })
+            // this.$refs.login.validate(valid => {
+            //     if (valid) {
+            //         // 执行登录操作
+            //         if (this.param.username != 'tianqb') {
+            //             this.$message.error('登陆失败');
+            //         } else {
+            //             this.$message.success('登录成功');
+            //             localStorage.setItem('ms_username', this.param.username);
+            //             this.$router.push('/');
+            //         }
+            //     } else {
+            //         this.$message.error('请输入账号和密码');
+            //         console.log('error submit!!');
+            //         return false;
+            //     }
+            // });
         }
     }
 };
