@@ -7,3 +7,17 @@ export function login(data) {
         data
     });
 }
+
+export function logout() {
+    return request({
+        url: '/sso/logout',
+        method: 'post'
+    });
+}
+
+export function getUserInfo() {
+    return request({
+        url: 'api/user/getUserInfo',
+        method: 'get'
+    });
+}

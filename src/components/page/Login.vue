@@ -47,14 +47,12 @@ export default {
         submitForm() {
             login(this.param).then(res => {
                 if (res.status == 200) {
-                    localStorage.setItem('access-token', res.data);
-                    // Cookie.set("access-token", res.data);
+                    Cookie.set("access-token", res.data);
                     this.$router.push('/');
                 } else {
                     this.$message(res.msg)
                 }
             }, err => {
-                console.log(err)
             })
             // this.$refs.login.validate(valid => {
             //     if (valid) {

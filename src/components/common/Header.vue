@@ -15,7 +15,7 @@
                     </el-tooltip>
                 </div>
                 <!-- 消息中心 -->
-                <div class="btn-bell">
+                <!-- <div class="btn-bell">
                     <el-tooltip
                         effect="dark"
                         :content="message?`有${message}条未读消息`:`消息中心`"
@@ -26,21 +26,18 @@
                         </router-link>
                     </el-tooltip>
                     <span class="btn-bell-badge" v-if="message"></span>
-                </div>
+                </div> -->
                 <!-- 用户头像 -->
-                <div class="user-avator">
+                <!-- <div class="user-avator">
                     <img src="../../assets/img/img.jpg" />
-                </div>
+                </div> -->
                 <!-- 用户名下拉菜单 -->
                 <el-dropdown class="user-name" trigger="click" @command="handleCommand">
                     <span class="el-dropdown-link">
-                        {{username}}
+                        {{userInfo.username}}
                         <i class="el-icon-caret-bottom"></i>
                     </span>
                     <el-dropdown-menu slot="dropdown">
-                        <a href="https://github.com/lin-xin/vue-manage-system" target="_blank">
-                            <el-dropdown-item>项目仓库</el-dropdown-item>
-                        </a>
                         <el-dropdown-item divided command="loginout">退出登录</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
@@ -50,27 +47,38 @@
 </template>
 <script>
 import bus from '../common/bus';
+import {getUserInfo, logout} from '../../api/login';
+import Cookie from 'js-cookie';
 export default {
     data() {
         return {
             collapse: false,
             fullscreen: false,
-            name: 'linxin',
-            message: 2
+            message: 2,
+            userInfo: {
+
+            }
         };
     },
     computed: {
-        username() {
-            let username = localStorage.getItem('ms_username');
-            return username ? username : this.name;
-        }
+        // username() {
+        //     let username = localStorage.getItem('ms_username');
+        //     return username ? username : this.name;
+        // }
     },
     methods: {
+        getUserInfo() {
+            getUserInfo().then(res => {
+                this.userInfo = res.data;
+            })
+        },
+
         // 用户名下拉菜单选择事件
         handleCommand(command) {
             if (command == 'loginout') {
-                localStorage.removeItem('ms_username');
-                this.$router.push('/login');
+                logout().then(res => {
+                    this.$router.push('/login');
+                })
             }
         },
         // 侧边栏折叠
@@ -110,6 +118,7 @@ export default {
         if (document.body.clientWidth < 1500) {
             this.collapseChage();
         }
+        this.getUserInfo();
     }
 };
 </script>
