@@ -1,6 +1,7 @@
 import axios from 'axios';
 import Cookie from 'js-cookie';
-import router from "../router/index"
+import router from "../router/index";
+import { Message } from 'element-ui';
 
 const service = axios.create({
     // process.env.NODE_ENV === 'development' 来判断是否开发环境
@@ -12,11 +13,13 @@ const service = axios.create({
 service.interceptors.request.use(
     config => {
         var accessToken = Cookie.get('access-token');
-        config.headers['token'] = JSON.parse(accessToken).token;
+        if (accessToken && typeof(accessToken) != "undefined" && accessToken != "undefined") {
+            config.headers['token'] = JSON.parse(accessToken).token;
+        }
         return config;
     },
     error => {
-        console.log(error);
+        console.log(error, "request error");
         return Promise.reject();
     }
 );
@@ -27,6 +30,9 @@ service.interceptors.response.use(
             return response.data;
         } else if (response.data.status == 401) {
             router.push('/login');
+        } else if (response.data.status == 403) {
+            Message (response.data.msg);
+            return response.data;
         } else {
             Promise.reject();
         }

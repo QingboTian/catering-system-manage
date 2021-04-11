@@ -21,7 +21,6 @@
                 <div class="login-btn">
                     <el-button type="primary" @click="submitForm()">登录</el-button>
                 </div>
-                <p class="login-tips">Tips : 用户名和密码随便填。</p>
             </el-form>
         </div>
     </div>
@@ -34,8 +33,8 @@ export default {
     data: function() {
         return {
             param: {
-                username: 'admin',
-                password: 'admin'
+                username: '',
+                password: ''
             },
             rules: {
                 username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
@@ -45,12 +44,18 @@ export default {
     },
     methods: {
         submitForm() {
+            if (this.param.username == '') {
+                this.$message("please input username");
+                return false;
+            }
+            if (this.param.password == '') {
+                this.$message("please input password");
+                return false;
+            }
             login(this.param).then(res => {
                 if (res.status == 200) {
                     Cookie.set("access-token", res.data);
                     this.$router.push('/');
-                } else {
-                    this.$message(res.msg)
                 }
             }, err => {
             })

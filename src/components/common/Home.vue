@@ -49,3 +49,10 @@ export default {
     }
 };
 </script>
+
+<style scoped>
+.content {
+    background-color: #fff;
+    margin: 10px;
+}
+</style>
