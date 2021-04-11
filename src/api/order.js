@@ -22,3 +22,17 @@ export function deleteDishes(data) {
         method: 'post'
     });
 }
+
+export function done(data) {
+    return request({
+        url: '/api/order/done?orderId=' + data,
+        method: 'post'
+    });
+}
+
+export function pay(data) {
+    return request({
+        url: '/api/order/pay?orderId=' + data,
+        method: 'post'
+    });
+}

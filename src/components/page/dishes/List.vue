@@ -31,7 +31,7 @@
                 <el-table-column prop="taste" label="口味" align="center"> </el-table-column>
                 <el-table-column prop="url" label="菜品图" align="center">
                     <template slot-scope="scope">
-                        <el-image style="width: 50px; height: 50px" :src="scope.url" fit="fit" :preview-src-list="[scope.url]"></el-image>
+                        <el-image style="width: 50px; height: 50px" :src="'http://127.0.0.1:8080' + scope.url" fit="fit" :preview-src-list="['//localhost:8080' + scope.url]"></el-image>
                     </template>
                 </el-table-column>
                 <el-table-column prop="category" label="类目名称" align="center"> </el-table-column>
@@ -49,10 +49,24 @@
                 </el-table-column>
                 <el-table-column label="操作" align="center" width="300">
                     <template slot-scope="scope">
-                        <el-button type="primary" size="mini" @click="editHandler">编辑</el-button>
-                        <el-button type="primary" v-if="scope.row.status == 1 || scope.row.status == 3" size="mini">上架</el-button>
-                        <el-button type="primary" v-if="scope.row.status == 2" size="mini">下架</el-button>
-                        <el-button type="danger" v-if="scope.row.status == 1 || scope.row.status == 3" size="mini">删除</el-button>
+                        <el-button type="primary" size="mini" @click="editHandler(scope.row)">编辑</el-button>
+                        <el-button
+                            type="primary"
+                            v-if="scope.row.status == 1 || scope.row.status == 3"
+                            size="mini"
+                            @click="onLineHandler(scope.row)"
+                            >上架</el-button
+                        >
+                        <el-button type="primary" v-if="scope.row.status == 2" size="mini" @click="offLineHandler(scope.row)"
+                            >下架</el-button
+                        >
+                        <el-button
+                            type="danger"
+                            v-if="scope.row.status == 1 || scope.row.status == 3"
+                            size="mini"
+                            @click="deleteHandler(scope.row)"
+                            >删除</el-button
+                        >
                     </template>
                 </el-table-column>
             </el-table>
@@ -73,13 +87,13 @@
             </center>
         </div>
         <el-dialog :visible.sync="visible" :before-close="handleClose" center>
-            <Create></Create>
+            <Create @onSubmit="onSubmit"></Create>
         </el-dialog>
     </div>
 </template>
 
 <script>
-import { create, deleteDishes, list } from '../../../api/dishes';
+import { create, deleteDishes, list, update, online, offline } from '../../../api/dishes';
 import Create from './Create';
 export default {
     data() {
@@ -116,6 +130,10 @@ export default {
         };
     },
     methods: {
+        onSubmit() {
+            this.visible = false;
+            this.getList(this.query);
+        },
         handleClose(done) {
             this.$confirm('确认关闭？')
                 .then((_) => {
@@ -123,7 +141,38 @@ export default {
                 })
                 .catch((_) => {});
         },
-        editHandler() {},
+        editHandler(row) {
+            // update(row).then((res) => {
+            //     if (res.status == 200) {
+            //         this.$message.success('更新成功');
+            //         this.getList(this.query);
+            //     }
+            // });
+        },
+        onLineHandler(row) {
+            online(row.id).then((res) => {
+                if (res.status == 200) {
+                    this.$message.success('上架成功');
+                    this.getList(this.query);
+                }
+            });
+        },
+        offLineHandler(row) {
+            offline(row.id).then((res) => {
+                if (res.status == 200) {
+                    this.$message.success('下架成功');
+                    this.getList(this.query);
+                }
+            });
+        },
+        deleteHandler(row) {
+            deleteDishes(row.id).then((res) => {
+                if (res.status == 200) {
+                    this.$message.success('删除成功');
+                    this.getList(this.query);
+                }
+            });
+        },
         createHandler() {
             this.visible = true;
         },

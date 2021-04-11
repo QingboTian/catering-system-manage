@@ -67,7 +67,7 @@
 
 <script>
 /* eslint-disable */
-import {list, create, deleteCategory} from "../../../api/category"
+import {categoryList, create, deleteCategory} from "../../../api/category"
 export default {
   data() {
     return {
@@ -186,7 +186,7 @@ export default {
     },
 
     loadClassify() {
-      list(this.query).then(res => {
+      categoryList(this.query).then(res => {
         this.list = res.data;
       })
     },

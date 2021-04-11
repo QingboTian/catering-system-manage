@@ -47,11 +47,6 @@ export default new Router({
                     meta: { title: '用户管理' }
                 },
                 {
-                    path: '/admin',
-                    component: () => import(/* webpackChunkName: "dashboard" */ '../components/page/admin/List.vue'),
-                    meta: { title: '系统管理' }
-                },
-                {
                     path: '/onlineOrder',
                     component: () => import(/* webpackChunkName: "dashboard" */ '../components/page/onlineOrder/Index.vue'),
                     meta: { title: '在线下单' }

@@ -27,17 +27,18 @@
                 <el-table-column prop="creator" label="创建者" align="center"> </el-table-column>
                 <el-table-column label="状态" align="center">
                     <template slot-scope="scope">
-                        <span v-if="scope.row.status == 1">未支付</span>
-                        <span v-if="scope.row.status == 2">已支付</span>
+                        <span v-if="scope.row.status == 1" style="color:red">未支付</span>
+                        <span v-if="scope.row.status == 2" style="color:green">已支付</span>
                         <span v-if="scope.row.status == 3">进行中</span>
-                        <span v-if="scope.row.status == 4">待评价</span>
-                        <span v-if="scope.row.status == 5">已完成</span>
+                        <span v-if="scope.row.status == 4" style="color:green">待评价</span>
+                        <span v-if="scope.row.status == 5" style="color:green">已完成</span>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作" align="center" width="300">
                     <template slot-scope="scope">
-                        <el-button type="primary" v-if="scope.row.status != 5" size="mini">完成</el-button>
-                        <el-button type="primary" size="mini">订单详情</el-button>
+                        <el-button type="primary" v-if="scope.row.status != 5" size="mini" @click="doneHandler(scope.row)">完成</el-button>
+                        <el-button type="primary" v-if="scope.row.status == 1" size="mini" @click="payHandler(scope.row)">支付</el-button>
+                        <!-- <el-button type="primary" size="mini">订单详情</el-button> -->
                     </template>
                 </el-table-column>
             </el-table>
@@ -61,7 +62,7 @@
 </template>
 
 <script>
-import { create, deleteDishes, list } from '../../../api/order';
+import { create, deleteDishes, list, done, pay } from '../../../api/order';
 export default {
     data() {
         return {
@@ -96,7 +97,23 @@ export default {
         };
     },
     methods: {
+        payHandler(row) {
+            pay(row.orderId).then((res) => {
+                if (res.status == 200) {
+                    this.$message.success('支付成功');
+                    this.getList(this.query);
+                }
+            });
+        },
         editHandler() {},
+        doneHandler(row) {
+            done(row.orderId).then((res) => {
+                if (res.status == 200) {
+                    this.$message.success('订单完成');
+                    this.getList(this.query);
+                }
+            });
+        },
         createHandler() {},
         handleSizeChange(val) {
             this.query.pageSize = val;

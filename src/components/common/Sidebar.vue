@@ -106,11 +106,6 @@ export default {
                     title: '用户管理'
                 },
                 {
-                    icon: 'el-icon-pie-chart',
-                    index: 'admin',
-                    title: '系统管理'
-                },
-                {
                     icon: 'el-icon-rank',
                     index: 'onlineOrder',
                     title: '在线下单'

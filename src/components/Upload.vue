@@ -1,7 +1,7 @@
 <template>
     <div>
         <el-upload
-        class="upload-demo"
+            class="upload-demo"
             :action="action"
             :on-preview="handlePreview"
             :on-remove="handleRemove"
@@ -23,16 +23,15 @@
 <script>
 export default {
     data() {
-        return {};
+        return {
+            fileList:[]
+        };
     },
     props: {
         action: {
             type: String,
-            require: true
-        },
-        fileList: {
-            type: Array,
-            default: []
+            require: true,
+            default: 'http://localhost:8080/api/upload/img'
         },
         limit: {
             type: Number,
@@ -52,9 +51,13 @@ export default {
             this.$message('文件上传中');
         },
         OnSuccess(response, file, fileList) {
-            this.$emit('OnSuccess', response, file, fileList);
+            if (response.status == 200) {
+                this.$message.success('上传成功');
+                this.$emit('onSuccess', response, file, fileList);
+            }
         },
         handleRemove(file, fileList) {
+            this.fileList = fileList;
             this.$emit('handleRemove', file, fileList);
         },
         handlePreview(file) {

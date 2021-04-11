@@ -1,6 +1,6 @@
 import request from '../utils/request';
 
-export function list(query) {
+export function categoryList(query) {
     return request({
         url: '/api/category/list/group',
         method: 'get',
