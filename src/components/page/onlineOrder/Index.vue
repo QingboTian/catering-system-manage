@@ -86,7 +86,8 @@ export default {
             tableData: [],
             query: {
                 currentPage: 1,
-                pageNum: 21
+                pageNum: 21,
+                status: 2
             },
             total: 0,
             categoryList: [],
