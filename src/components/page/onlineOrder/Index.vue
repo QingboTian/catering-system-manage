@@ -9,6 +9,7 @@
                 background-color="#EBEEF5"
                 text-color="#000"
             >
+                <el-menu-item index="all">全部</el-menu-item>
                 <el-submenu v-for="item in categoryList" :key="item.id" :index="item.id.toString()">
                     <template slot="title">{{ item.name }}</template>
                     <el-menu-item :index="subItem.id.toString()" v-for="subItem in item.children" :key="subItem.id">{{
@@ -91,7 +92,7 @@ export default {
             },
             total: 0,
             categoryList: [],
-            defaultActice: '',
+            defaultActice: 'all',
             carItem: [],
             // 购物车商品数量
             carItemNum: 0,
@@ -102,6 +103,7 @@ export default {
         };
     },
     methods: {
+        // 下单操作
         orderHandler() {
             if (this.itemSelectArray.length <= 0) {
                 this.$message('请选择商品再进行下单！');
@@ -126,6 +128,7 @@ export default {
         handleSelectionChange(data) {
             this.itemSelectArray = data;
         },
+        // 打开购物车
         clickCartHandler() {
             this.dialogTableVisible = true;
         },
@@ -156,6 +159,7 @@ export default {
                 this.loadShoppingCartList();
             });
         },
+        // 购物车商品删除
         deleteItemHandler(row) {
             deleteCartItem(row.dishesId).then((res) => {
                 this.$message.success('删除成功');
@@ -171,9 +175,14 @@ export default {
             this.loadDishesList(this.query);
         },
         categorySelectHandle(id) {
-            this.query.categoryId = id;
+            if (id == 'all') {
+                this.query.categoryId = null;
+            } else {
+                this.query.categoryId = id;
+            }
             this.loadDishesList(this.query);
         },
+        // 加载菜单
         loadDishesList(query) {
             list(query).then((res) => {
                 this.currentPage = res.data.pageNum;
@@ -182,21 +191,38 @@ export default {
                 this.tableData = res.data.list;
             });
         },
+        // 加载分类
         loadCategoryList() {
             categoryList({ parentId: 0 }).then((res) => {
                 this.categoryList = res.data;
                 this.defaultActice = this.categoryList[0].id.toString();
             });
         },
+        // 若商品已经勾选之后商品数量还发生变化  需要重置
+        itemSelectArrayInit(carItem) {
+            console.log(this.itemSelectArray)
+            for(var i = 0; i < this.itemSelectArray.length; i++) {
+                if (carItem.dishesId == this.itemSelectArray[i].dishesId) {
+                    this.itemSelectArray[i] = carItem;
+                    break;
+                }
+            }
+            console.log(this.itemSelectArray)
+        },
+        // 加载购物车
         loadShoppingCartList() {
+            this.itemSelectArray;
             cartList().then((res) => {
                 this.carItem = res.data;
                 var size = 0;
+                this.cartTotalPrice = 0;
                 for (var i = 0; i < this.carItem.length; i++) {
                     size += this.carItem[i].total;
                     this.cartTotalPrice += this.carItem[i].totalPrice;
+                    // this.itemSelectArrayInit(this.carItem[i]);
                 }
                 this.carItemNum = size;
+                this.itemSelectArray = []
             });
         }
     },

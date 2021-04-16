@@ -36,3 +36,10 @@ export function pay(data) {
         method: 'post'
     });
 }
+
+export function statistical() {
+    return request({
+        url: '/api/order/statistical',
+        method: 'get'
+    });
+}

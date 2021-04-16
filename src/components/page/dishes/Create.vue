@@ -18,17 +18,18 @@
                 ></el-cascader>
             </el-form-item>
             <el-form-item label="成本价" required="">
-                <el-input v-model.trim="form.costPrice"></el-input>
+                <el-input-number :controls="false"  :precision="2" :min='0' :max="100000000"  v-model="form.costPrice" ></el-input-number>
             </el-form-item>
             <el-form-item label="售价" required="">
-                <el-input v-model.trim="form.price"></el-input>
+            <el-input-number :controls="false"  :precision="2" :min='0' :max="100000000"  v-model="form.price" ></el-input-number>
+                
             </el-form-item>
             <el-form-item label="单位" required="">
                 <el-input v-model.trim="form.unit" placeholder="菜品的计量单位，如一份"></el-input>
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="onSubmit">立即创建</el-button>
-                <el-button>取消</el-button>
+                <el-button @click="cancel">取消</el-button>
             </el-form-item>
         </el-form>
     </div>
@@ -89,6 +90,9 @@ export default {
                     this.$emit('onSubmit');
                 }
             })
+        },
+        cancel() {
+            this.$emit("cancel")
         },
         onSuccess(response, file, fileList) {
             this.form.url = response.data;

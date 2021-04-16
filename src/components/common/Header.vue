@@ -70,6 +70,7 @@ export default {
         getUserInfo() {
             getUserInfo().then(res => {
                 this.userInfo = res.data;
+                localStorage.setItem("userInfo", JSON.stringify(this.userInfo));
             })
         },
 

@@ -31,7 +31,7 @@
                 <el-table-column prop="taste" label="口味" align="center"> </el-table-column>
                 <el-table-column prop="url" label="菜品图" align="center">
                     <template slot-scope="scope">
-                        <el-image style="width: 50px; height: 50px" :src="'http://127.0.0.1:8080' + scope.url" fit="fit" :preview-src-list="['//localhost:8080' + scope.url]"></el-image>
+                        <el-image style="width: 50px; height: 50px" :src="'http://127.0.0.1:8081' + scope.url" fit="fit" :preview-src-list="['//localhost:8080' + scope.url]"></el-image>
                     </template>
                 </el-table-column>
                 <el-table-column prop="category" label="类目名称" align="center"> </el-table-column>
@@ -49,7 +49,7 @@
                 </el-table-column>
                 <el-table-column label="操作" align="center" width="300">
                     <template slot-scope="scope">
-                        <el-button type="primary" size="mini" @click="editHandler(scope.row)">编辑</el-button>
+                        <!-- <el-button type="primary" size="mini" @click="editHandler(scope.row)">编辑</el-button> -->
                         <el-button
                             type="primary"
                             v-if="scope.row.status == 1 || scope.row.status == 3"
@@ -87,7 +87,7 @@
             </center>
         </div>
         <el-dialog :visible.sync="visible" :before-close="handleClose" center>
-            <Create @onSubmit="onSubmit"></Create>
+            <Create @onSubmit="onSubmit" @cancel="cancel"></Create>
         </el-dialog>
     </div>
 </template>
@@ -130,6 +130,9 @@ export default {
         };
     },
     methods: {
+        cancel() {
+            this.visible = false;
+        },
         onSubmit() {
             this.visible = false;
             this.getList(this.query);
@@ -142,6 +145,8 @@ export default {
                 .catch((_) => {});
         },
         editHandler(row) {
+            var data = JSON.parse(JSON.stringify(row));
+            this.visible = true;
             // update(row).then((res) => {
             //     if (res.status == 200) {
             //         this.$message.success('更新成功');

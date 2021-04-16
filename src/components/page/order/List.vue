@@ -15,6 +15,9 @@
                 </el-form-item>
             </el-form>
         </div>
+        <div v-if="roleId == 1">
+            当日营收：{{statistical.todayRevenue}} 当日成本：{{statistical.todayCost}} 当日利润：{{statistical.todayRevenue - statistical.todayCost}} 总营收：{{statistical.totalRevenue}} 总成本：{{statistical.totalCost}} 总利润：{{statistical.totalRevenue - statistical.totalCost}}
+        </div>
         <div>
             <el-table :data="tableData" border style="width: 100%">
                 <el-table-column prop="orderId" label="订单ID" align="center"> </el-table-column>
@@ -62,14 +65,21 @@
 </template>
 
 <script>
-import { create, deleteDishes, list, done, pay } from '../../../api/order';
+import { create, deleteDishes, list, done, pay, statistical } from '../../../api/order';
 export default {
     data() {
         return {
+            roleId: 0,
             tableData: [],
             query: {
                 currentPage: 1,
                 pageSize: 10
+            },
+            statistical: {
+                todayRevenue:null,
+                todayCost: null,
+                totalRevenue: null,
+                totalCost: null
             },
             total: 0,
             options: {
@@ -135,10 +145,23 @@ export default {
                 this.total = res.data.total;
                 this.tableData = res.data.list;
             });
+        },
+        loadStatistical() {
+            statistical().then(res => {
+                var data = res.data;
+                this.statistical = data;
+            })
         }
     },
     created() {
         this.getList(this.query);
+        this.loadStatistical();
+        var userInfo = JSON.parse(localStorage.getItem("userInfo"));
+        if (1 == userInfo.roleId) {
+            this.roleId = 1;
+        } else {
+            this.roleId = 0;
+        }
     }
 };
 </script>
