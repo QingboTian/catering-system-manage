@@ -19,7 +19,10 @@
                     </el-input>
                 </el-form-item>
                 <div class="login-btn">
-                    <el-button type="primary" @click="submitForm()">登录</el-button>
+                    <el-button type="primary" @click="submitForm()">{{content}}</el-button>
+                </div>
+                <div class="login-tips" @click="regist()">
+                    没有账号?点击这里注册
                 </div>
             </el-form>
         </div>
@@ -32,6 +35,7 @@ import Cookie from 'js-cookie';
 export default {
     data: function() {
         return {
+            content: "登录",
             param: {
                 username: '',
                 password: ''
@@ -43,6 +47,9 @@ export default {
         };
     },
     methods: {
+        regist() {
+            this.content = "注册"
+        },
         submitForm() {
             if (this.param.username == '') {
                 this.$message("please input username");
@@ -59,22 +66,6 @@ export default {
                 }
             }, err => {
             })
-            // this.$refs.login.validate(valid => {
-            //     if (valid) {
-            //         // 执行登录操作
-            //         if (this.param.username != 'tianqb') {
-            //             this.$message.error('登陆失败');
-            //         } else {
-            //             this.$message.success('登录成功');
-            //             localStorage.setItem('ms_username', this.param.username);
-            //             this.$router.push('/');
-            //         }
-            //     } else {
-            //         this.$message.error('请输入账号和密码');
-            //         console.log('error submit!!');
-            //         return false;
-            //     }
-            // });
         }
     }
 };
@@ -121,5 +112,6 @@ export default {
     font-size: 12px;
     line-height: 30px;
     color: #fff;
+    cursor:pointer
 }
 </style>

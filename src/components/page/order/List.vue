@@ -155,10 +155,10 @@ export default {
     },
     created() {
         this.getList(this.query);
-        this.loadStatistical();
         var userInfo = JSON.parse(localStorage.getItem("userInfo"));
         if (1 == userInfo.roleId) {
             this.roleId = 1;
+            this.loadStatistical();
         } else {
             this.roleId = 0;
         }

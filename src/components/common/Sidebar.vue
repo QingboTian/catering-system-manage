@@ -51,6 +51,8 @@
 
 <script>
 import bus from '../common/bus';
+import { menuList } from '../../api/menu';
+import { Loading } from 'element-ui';
 export default {
     data() {
         return {
@@ -113,6 +115,14 @@ export default {
             ]
         };
     },
+    methods: {
+        // 加载菜单
+        list() {
+            menuList().then(res => {
+                this.items = res.data
+            })
+        }
+    },
     computed: {
         onRoutes() {
             return this.$route.path.replace('/', '');
@@ -124,6 +134,7 @@ export default {
             this.collapse = msg;
             bus.$emit('collapse-content', msg);
         });
+        this.list();
     }
 };
 </script>
