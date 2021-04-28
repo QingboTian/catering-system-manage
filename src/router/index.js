@@ -51,11 +51,16 @@ export default new Router({
                     component: () => import(/* webpackChunkName: "dashboard" */ '../components/page/onlineOrder/Index.vue'),
                     meta: { title: '在线下单' }
                 },
-                // {
-                //     path: '/dashboard',
-                //     component: () => import(/* webpackChunkName: "dashboard" */ '../components/page/Dashboard.vue'),
-                //     meta: { title: '系统首页' }
-                // },
+                {
+                    path: '/room',
+                    component: () => import(/* webpackChunkName: "dashboard" */ '../components/page/room/List.vue'),
+                    meta: { title: '包间管理' }
+                },
+                {
+                    path: '/appointment',
+                    component: () => import(/* webpackChunkName: "dashboard" */ '../components/page/appointment/List.vue'),
+                    meta: { title: '预约管理' }
+                },
                 // {
                 //     path: '/icon',
                 //     component: () => import(/* webpackChunkName: "icon" */ '../components/page/Icon.vue'),
